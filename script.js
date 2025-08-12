@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   /**
-   * Definição do cardápio. Cada categoria possui um nome, um conjunto de itens
-   * (com nome e preço) e um ícone decorativo associado. O preço é mantido
-   * como string para preservar o formato com vírgula.
+   * Definição do cardápio. Agora com a categoria Combo Promocional,
+   * incluindo os itens e suas descrições com preços.
    */
   const menuData = [
     {
@@ -103,12 +102,24 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Salada De Frutas', price: '16,50' },
         { name: 'Frutas', price: '4,00' }
       ]
+    },
+    // Nova categoria: Combo Promocional
+    {
+      name: 'Combo Promocional',
+      icon: 'combo_promocional.png', // Você pode adicionar uma imagem representativa aqui
+      items: [
+        { name: 'Combo 1', price: '22,50', description: 'Pratos do dia (Feijoada)' },
+        { name: 'Combo 2', price: '15,50', description: 'Cuscuz com ovo' },
+        { name: 'Combo 3', price: '13,50', description: 'Torta de frango + mini refri' },
+        { name: 'Combo 4', price: '18,50', description: 'Dolce Calabresa' },
+        { name: 'Combo 5', price: '11,00', description: 'Café com leite médio + pão de queijo' },
+        { name: 'Combo 6', price: '12,50', description: 'Cappuccino + pão de queijo' }
+      ]
     }
   ];
 
   /**
-   * Lista de setores que podem ser selecionados no cardápio. Estes setores
-   * incluem alguns dos departamentos mais comuns em hospitais gerais.
+   * Lista de setores que podem ser selecionados no cardápio.
    */
   const sectors = [
     'Emergência',
@@ -242,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.keys(qtyIndicators).forEach(key => delete qtyIndicators[key]);
 
     const leftCategories = ['Salgados', 'Comidinhas', 'Doces'];
-    const rightCategories = ['Cafeteria', 'Bebidas', 'Petit Four'];
+    const rightCategories = ['Cafeteria', 'Bebidas', 'Petit Four', 'Combo Promocional'];
 
     function createCategoryBlock(catName) {
       const category = menuData.find(cat => cat.name === catName);
@@ -315,61 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sectorSelect.appendChild(option);
   });
 
-  /**
-   * Manipulador de envio do formulário. Constrói a mensagem de WhatsApp
-   * com base nos itens selecionados e nos dados do cliente.
-   */
-  const orderForm = document.getElementById('orderForm');
-  orderForm.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const orderLines = [];
-    let totalOrder = 0;
-    const names = Object.keys(cart);
-
-    names.forEach(name => {
-      const entry = cart[name];
-      const qty = entry.quantity;
-      const priceStr = entry.price;
-      const priceNum = parseFloat(priceStr.replace(',', '.'));
-      const itemTotal = priceNum * qty;
-      totalOrder += itemTotal;
-      const itemTotalStr = itemTotal.toFixed(2).replace('.', ',');
-      orderLines.push(`${name}: ${qty} x R$ ${priceStr} = R$ ${itemTotalStr}`);
-    });
-
-    if (orderLines.length === 0) {
-      alert('Selecione pelo menos um item do cardápio.');
-      return;
-    }
-
-    const customerName = document.getElementById('customerName').value.trim();
-    const customerPhone = document.getElementById('customerPhone').value.trim();
-    const customerRoom = document.getElementById('customerRoom').value.trim();
-    const customerSector = document.getElementById('customerSector').value;
-    const paymentMethod = document.getElementById('paymentMethod').value;
-    const consumptionType = document.getElementById('consumptionType').value;
-
-    const totalStr = totalOrder.toFixed(2).replace('.', ',');
-
-    const message =
-      `Olá, gostaria de fazer um pedido:\n\n` +
-      `Itens selecionados:\n${orderLines.join('\n')}\n\n` +
-      `Total do pedido: R$ ${totalStr}\n\n` +
-      `Nome: ${customerName}\n` +
-      `Telefone: ${customerPhone}\n` +
-      `Quarto: ${customerRoom}\n` +
-      `Setor: ${customerSector}\n` +
-      `Forma de pagamento: ${paymentMethod}\n` +
-      `Serviço: ${consumptionType}`;
-
-    const whatsappNumber = '5511918360016';  // Número atualizado
-    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-    window.open(whatsappURL, '_blank');
-  });
-
-  // Botão flutuante para navegar ao carrinho ao clicar
+  // Função para rolar até o carrinho ao clicar no botão
   const cartButtonElem = document.getElementById('cartButton');
   cartButtonElem.addEventListener('click', () => {
     const cartSection = document.getElementById('cart-section');
