@@ -25,9 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Pastel De Frango', price: '9,50' },
         { name: 'Pastel Int. Brócolis Ou Ricota', price: '10,00' },
         { name: 'Pão De Batata', price: '8,00' },
-        { name: 'Travesseirinho De Queijo', price: '9,00' },
         { name: 'Fohado De Presunto', price: '9,50' },
-        { name: 'Pão De Quijo', price: '5,00' },
+        { name: 'Pão De Queijo', price: '5,00' },
         { name: 'Lanche Natural', price: '19,00' },
         { name: 'Pão Francês', price: '5,00' },
         { name: 'Mini Pizza', price: '12,50' },
@@ -69,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Comida Brasileito (Pratos Rapidos)', price: '27,50' },
         { name: 'Cremes', price: '26,50' },
         { name: 'Prato Vegetariano', price: '40,00' },
-        { name: 'Salada Verde', price: '25,00' },
         { name: 'Tapioca Básica', price: '7,00' },
         { name: 'Ovo', price: '13,00' }
       ]
@@ -78,21 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Doces',
       icon: 'bolo fatia.png',
       items: [
-        { name: 'Halls', price: '3,00' },
+        { name: 'Halls', price: '4,00' },
         { name: 'Trident', price: '4,00' },
         { name: 'Povilho', price: '8,00' },
         { name: 'Bis', price: '7,00' },
         { name: 'Pururuca', price: '5,00' },
         { name: 'Chocolate 34g', price: '6,00' },
         { name: 'Chocolate 90g', price: '13,50' },
-        { name: 'Clube Social', price: '3,00' },
         { name: 'Salgadinho 40g', price: '4,00' },
         { name: 'Baton', price: '3,00' },
         { name: 'Suflair', price: '8,50' },
         { name: 'Paçoca', price: '1,20' },
         { name: 'Mix De Nuts', price: '17,00' },
         { name: 'Castanha', price: '17,00' },
-        { name: 'Bolacha Recheada Trakinas', price: '7,00' }
+        { name: 'Bolacha Recheada', price: '7,00' }
       ]
     },
     {
@@ -110,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'T. Morango E Maçã', price: '11,50' },
         { name: 'Quindim', price: '9,50' },
         { name: 'Donuts', price: '10,50' },
-        { name: 'Muffins', price: '9,50' },
         { name: 'Salada De Frutas', price: '16,50' },
         { name: 'Frutas', price: '4,00' }
       ]
