@@ -1,15 +1,6 @@
-//
-// Script responsável pela lógica do pedido: popular lista de setores do hospital,
-// capturar itens selecionados e montar uma mensagem formatada para envio via
-// WhatsApp. O número de telefone de destino é definido abaixo e pode ser
-// alterado conforme necessidade.
-//
-
 document.addEventListener('DOMContentLoaded', () => {
   /**
-   * Definição do cardápio. Cada categoria possui um nome, um conjunto de itens
-   * (com nome e preço) e um ícone decorativo associado. O preço é mantido
-   * como string para preservar o formato com vírgula.
+   * Definição do cardápio com novos ícones e emojis para os combos promocionais.
    */
   const menuData = [
     {
@@ -31,6 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Pão Francês', price: '5,00' },
         { name: 'Mini Pizza', price: '12,50' },
         { name: 'Torta De Frango', price: '11,50' }
+      ]
+    },
+    {
+      name: 'Combo Promocional',
+      icon: 'combo_promocional.png',  // Ícone personalizado para os combos
+      items: [
+        { name: '🥘 Combo Feijoada', price: '22,50', description: 'Pratos do dia (Feijoada)' },
+        { name: '🍲 Combo Cuscuz', price: '15,50', description: 'Cuscuz com ovo, saboroso e rápido' },
+        { name: '🍗 Combo Frango', price: '13,50', description: 'Torta de frango + mini refri' },
+        { name: '🍕 Combo Dolce Calabresa', price: '18,50', description: 'Pizza calabresa com molho especial' },
+        { name: '☕ Combo Café & Pão', price: '11,00', description: 'Café com leite médio + pão de queijo' },
+        { name: '🍩 Combo Cappuccino', price: '12,50', description: 'Cappuccino + pão de queijo quentinho' }
       ]
     },
     {
@@ -60,102 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Mini Refri', price: '5,00' },
         { name: 'Chá Quente', price: '6,00' }
       ]
-    },
-    {
-      name: 'Comidinhas',
-      icon: 'esfiha.png',
-      items: [
-        { name: 'Comida Brasileito (Pratos Rapidos)', price: '27,50' },
-        { name: 'Cremes', price: '26,50' },
-        { name: 'Prato Vegetariano', price: '40,00' },
-        { name: 'Tapioca Básica', price: '7,00' },
-        { name: 'Ovo', price: '13,00' }
-      ]
-    },
-    {
-      name: 'Doces',
-      icon: 'bolo fatia.png',
-      items: [
-        { name: 'Halls', price: '4,00' },
-        { name: 'Trident', price: '4,00' },
-        { name: 'Povilho', price: '8,00' },
-        { name: 'Bis', price: '7,00' },
-        { name: 'Pururuca', price: '5,00' },
-        { name: 'Chocolate 34g', price: '6,00' },
-        { name: 'Chocolate 90g', price: '13,50' },
-        { name: 'Salgadinho 40g', price: '4,00' },
-        { name: 'Baton', price: '3,00' },
-        { name: 'Suflair', price: '8,50' },
-        { name: 'Paçoca', price: '1,20' },
-        { name: 'Mix De Nuts', price: '17,00' },
-        { name: 'Castanha', price: '17,00' },
-        { name: 'Bolacha Recheada', price: '7,00' }
-      ]
-    },
-    {
-      name: 'Petit Four',
-      icon: 'bolo decorado.png',
-      items: [
-        { name: 'Biscoito Petiti Four', price: '9,00' },
-        { name: 'Jujuba', price: '7,00' },
-        { name: 'Bolo Pedaço', price: '9,50' },
-        { name: 'Torta Holandesa', price: '16,00' },
-        { name: 'Bolo Festa', price: '16,00' },
-        { name: 'Trufa', price: '5,50' },
-        { name: 'Pirulito', price: '14,50' },
-        { name: 'Tiramissu', price: '14,50' },
-        { name: 'T. Morango E Maçã', price: '11,50' },
-        { name: 'Quindim', price: '9,50' },
-        { name: 'Donuts', price: '10,50' },
-        { name: 'Salada De Frutas', price: '16,50' },
-        { name: 'Frutas', price: '4,00' }
-      ]
-    },
-    // NOVA CATEGORIA — COMBOS
-    {
-      name: 'Combo Promocional',
-      icon: 'combo_promocional.png',
-      items: [
-        { name: 'Combo 1', price: '22,50', description: 'Pratos do dia (Feijoada)' },
-        { name: 'Combo 2', price: '15,50', description: 'Cuscuz com ovo' },
-        { name: 'Combo 3', price: '13,50', description: 'Torta de frango + mini refri' },
-        { name: 'Combo 4', price: '18,50', description: 'Dolce Calabresa' },
-        { name: 'Combo 5', price: '11,00', description: 'Café com leite médio + pão de queijo' },
-        { name: 'Combo 6', price: '12,50', description: 'Cappuccino + pão de queijo' }
-      ]
     }
-  ];
-
-  // Lista de setores que podem ser selecionados no cardápio.
-  const sectors = [
-    'Emergência',
-    'Trauma',
-    'Queimados',
-    'Cardiologia',
-    'UTI (Terapia Intensiva)',
-    'Neurologia',
-    'Obstetrícia e Ginecologia',
-    'Oncologia',
-    'Farmácia',
-    'Patologia',
-    'Radiologia'
   ];
 
   // Carrinho de compras
   const cart = {};
-
-  // Mapeamento de indicadores de quantidade associados a cada item.
   const qtyIndicators = {};
 
-  /** Atualiza os indicadores de quantidade e o botão flutuante do carrinho. */
+  // Função de atualização do carrinho
   function updateIndicators() {
     Object.keys(qtyIndicators).forEach(name => {
       const span = qtyIndicators[name];
       span.textContent = cart[name] ? cart[name].quantity : '';
     });
+
     const cartButton = document.getElementById('cartButton');
     const cartCount = document.getElementById('cartCount');
-    const totalItems = Object.values(cart).reduce((sum, e) => sum + e.quantity, 0);
+    const totalItems = Object.values(cart).reduce((sum, entry) => sum + entry.quantity, 0);
     if (totalItems > 0) {
       cartButton.style.display = 'block';
       cartCount.textContent = totalItems;
@@ -165,24 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /** Adiciona item ao carrinho. */
+  // Função para adicionar item ao carrinho
   function addToCart(itemName, itemPrice) {
-    if (!cart[itemName]) cart[itemName] = { quantity: 1, price: itemPrice };
-    else cart[itemName].quantity++;
+    if (!cart[itemName]) {
+      cart[itemName] = { quantity: 1, price: itemPrice };
+    } else {
+      cart[itemName].quantity++;
+    }
     renderCart();
     updateIndicators();
   }
 
-  /** Atualiza quantidade de um item no carrinho. */
-  function updateCart(itemName, delta) {
-    if (!cart[itemName]) return;
-    cart[itemName].quantity += delta;
-    if (cart[itemName].quantity <= 0) delete cart[itemName];
-    renderCart();
-    updateIndicators();
-  }
-
-  /** Renderiza o conteúdo do carrinho. */
+  // Função para renderizar o carrinho
   function renderCart() {
     const cartSection = document.getElementById('cart-section');
     const cartItemsContainer = document.getElementById('cartItems');
@@ -201,18 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const priceNum = parseFloat(entry.price.replace(',', '.'));
       const itemTotal = priceNum * entry.quantity;
       total += itemTotal;
-
       const row = document.createElement('div');
       row.className = 'cart-item';
-
       const nameSpan = document.createElement('span');
       nameSpan.className = 'cart-item-name';
       nameSpan.textContent = name;
-
       const priceSpan = document.createElement('span');
       priceSpan.className = 'cart-item-price';
       priceSpan.textContent = `R$ ${entry.price}`;
-
       const controls = document.createElement('div');
       controls.className = 'cart-item-controls';
       const minusBtn = document.createElement('button');
@@ -225,11 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const plusBtn = document.createElement('button');
       plusBtn.textContent = '+';
       plusBtn.addEventListener('click', () => updateCart(name, 1));
-
       controls.appendChild(minusBtn);
       controls.appendChild(qtySpan);
       controls.appendChild(plusBtn);
-
       row.appendChild(nameSpan);
       row.appendChild(priceSpan);
       row.appendChild(controls);
@@ -239,10 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cartTotalSpan.textContent = totalStr;
   }
 
-  /**
-   * Gera dinamicamente as seções do cardápio (duas colunas),
-   * mantendo decorações e permitindo descrições nos itens (ex.: combos).
-   */
+  // Função para renderizar o menu com ícones, emojis e descrições nos combos
   function renderMenu() {
     const menuContainer = document.getElementById('menu');
     menuContainer.innerHTML = '';
@@ -345,58 +254,15 @@ document.addEventListener('DOMContentLoaded', () => {
     rightCategories.forEach(name => {
       const block = createCategoryBlock(name);
       if (block) rightCol.appendChild(block);
-      // Decoração no meio após Cafeteria
-      if (name === 'Cafeteria') {
-        const midDecor = document.createElement('div');
-        midDecor.className = 'decor-middle';
-        const row1 = document.createElement('div');
-        const rocamboleImg = document.createElement('img');
-        rocamboleImg.src = 'images/rocambole.png';
-        rocamboleImg.alt = '';
-        rocamboleImg.className = 'decor-image';
-        const rosquinhaImg = document.createElement('img');
-        rosquinhaImg.src = 'images/rosquinha.png';
-        rosquinhaImg.alt = '';
-        rosquinhaImg.className = 'decor-image';
-        row1.appendChild(rocamboleImg);
-        row1.appendChild(rosquinhaImg);
-        row1.style.display = 'flex';
-        row1.style.justifyContent = 'center';
-        row1.style.gap = '20px';
-        midDecor.appendChild(row1);
-
-        const row2 = document.createElement('div');
-        const xicaraImg = document.createElement('img');
-        xicaraImg.src = 'images/xicara.png';
-        xicaraImg.alt = '';
-        xicaraImg.className = 'decor-image';
-        row2.appendChild(xicaraImg);
-        row2.style.display = 'flex';
-        row2.style.justifyContent = 'center';
-        row2.style.marginTop = '10px';
-        midDecor.appendChild(row2);
-        rightCol.appendChild(midDecor);
-      }
     });
-    // Decoração inferior direita
-    const rightBottomDecor = document.createElement('div');
-    rightBottomDecor.className = 'decor-bottom';
-    const tortaImg = document.createElement('img');
-    tortaImg.src = 'images/torta doce.png';
-    tortaImg.alt = '';
-    tortaImg.className = 'decor-image';
-    rightBottomDecor.appendChild(tortaImg);
-    rightCol.appendChild(rightBottomDecor);
 
     menuContainer.appendChild(leftCol);
     menuContainer.appendChild(rightCol);
   }
 
-  // Render inicial
   renderMenu();
   updateIndicators();
 
-  // Preenche o select de setores
   const sectorSelect = document.getElementById('customerSector');
   sectors.forEach(sector => {
     const option = document.createElement('option');
