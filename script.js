@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `Forma de pagamento: ${paymentMethod}\n` +
       `Serviço: ${consumptionType}`;
     // Número do WhatsApp de destino (DDI + DDD + número, sem caracteres especiais)
-    const whatsappNumber = '5511982544973';
+    const whatsappNumber = '5511918360016';
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
   });
