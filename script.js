@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   const menuData = [
     {
-      name: 'Salgados',  // Nome da categoria
-      icon: 'salgado.png',  // Ícone associado à categoria
-      items: [  // Lista de itens dentro dessa categoria
+      name: 'Salgados',
+      icon: 'salgado.png',
+      items: [
         { name: 'Calzone', price: '9,50' },
         { name: 'Coxinha', price: '9,50' },
         { name: 'Croissnat (Pizza | 4 Queijos | Presunto e Queijo)', price: '9,50' },
@@ -142,11 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
         span.textContent = '';
       }
     });
-
     const cartButton = document.getElementById('cartButton');
     const cartCount = document.getElementById('cartCount');
     const totalItems = Object.values(cart).reduce((sum, entry) => sum + entry.quantity, 0);
-    
     if (totalItems > 0) {
       cartButton.style.display = 'block';
       cartCount.textContent = totalItems;
@@ -191,58 +189,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartTotalSpan = document.getElementById('cartTotal');
     cartItemsContainer.innerHTML = '';
     let total = 0;
-
     const names = Object.keys(cart);
     if (names.length === 0) {
       cartSection.style.display = 'none';
       cartTotalSpan.textContent = '0,00';
       return;
     }
-
     cartSection.style.display = 'block';
     names.forEach(name => {
       const entry = cart[name];
       const priceNum = parseFloat(entry.price.replace(',', '.'));
       const itemTotal = priceNum * entry.quantity;
       total += itemTotal;
-
       const row = document.createElement('div');
       row.className = 'cart-item';
-
       const nameSpan = document.createElement('span');
       nameSpan.className = 'cart-item-name';
       nameSpan.textContent = name;
-
       const priceSpan = document.createElement('span');
       priceSpan.className = 'cart-item-price';
       priceSpan.textContent = `R$ ${entry.price}`;
-
       const controls = document.createElement('div');
       controls.className = 'cart-item-controls';
-
       const minusBtn = document.createElement('button');
       minusBtn.textContent = '−';
       minusBtn.addEventListener('click', () => updateCart(name, -1));
-
       const qtySpan = document.createElement('span');
       qtySpan.textContent = entry.quantity;
       qtySpan.style.minWidth = '20px';
       qtySpan.style.textAlign = 'center';
-
       const plusBtn = document.createElement('button');
       plusBtn.textContent = '+';
       plusBtn.addEventListener('click', () => updateCart(name, 1));
-
       controls.appendChild(minusBtn);
       controls.appendChild(qtySpan);
       controls.appendChild(plusBtn);
-
       row.appendChild(nameSpan);
       row.appendChild(priceSpan);
       row.appendChild(controls);
       cartItemsContainer.appendChild(row);
     });
-
     const totalStr = total.toFixed(2).replace('.', ',');
     cartTotalSpan.textContent = totalStr;
   }
@@ -263,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!category) return null;
       const block = document.createElement('div');
       block.className = 'category-block';
-      
       const h3 = document.createElement('h3');
       const iconImg = document.createElement('img');
       iconImg.src = `images/${category.icon}`;
@@ -274,36 +259,29 @@ document.addEventListener('DOMContentLoaded', () => {
       h3.appendChild(iconImg);
       h3.appendChild(titleSpan);
       block.appendChild(h3);
-
       const itemList = document.createElement('div');
       itemList.className = 'category-items';
       category.items.forEach(item => {
         const row = document.createElement('div');
         row.className = 'menu-row';
-
         const nameSpan = document.createElement('span');
         nameSpan.textContent = item.name;
-
         const priceSpan = document.createElement('span');
         priceSpan.textContent = `R$ ${item.price}`;
-
         const addBtn = document.createElement('button');
         addBtn.type = 'button';
         addBtn.textContent = '+';
         addBtn.className = 'add-btn';
         addBtn.addEventListener('click', () => addToCart(item.name, item.price));
-
         const qtySpan = document.createElement('span');
         qtySpan.className = 'qty-indicator';
         qtyIndicators[item.name] = qtySpan;
-
         row.appendChild(nameSpan);
         row.appendChild(priceSpan);
         row.appendChild(addBtn);
         row.appendChild(qtySpan);
         itemList.appendChild(row);
       });
-
       block.appendChild(itemList);
       return block;
     }
