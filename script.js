@@ -1,17 +1,6 @@
-//
-// Script responsável pela lógica do pedido: popular lista de setores do hospital,
-// capturar itens selecionados e montar uma mensagem formatada para envio via
-// WhatsApp. O número de telefone de destino é definido abaixo e pode ser
-// alterado conforme necessidade.
-//
-
 document.addEventListener('DOMContentLoaded', () => {
-  /**
-   * Definição do cardápio. Cada categoria possui um nome, um conjunto de itens
-   * (com nome e preço) e um ícone decorativo associado. O preço é mantido
-   * como string para preservar o formato com vírgula.
-   */
   const menuData = [
+    // Definição do cardápio...
     {
       name: 'Salgados',
       icon: 'salgado.png',
@@ -113,9 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // Lista de setores que podem ser selecionados no cardápio. Estes setores
-  // incluem alguns dos departamentos mais comuns em hospitais gerais,
-  // conforme descrito na literatura sobre hospitais【964339475978022†L542-L551】【964339475978022†L552-L554】.
   const sectors = [
     'Emergência',
     'Trauma',
@@ -130,20 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     'Radiologia'
   ];
 
-  // Carrinho de compras: objeto que armazena os itens adicionados. Cada
-  // propriedade é um item com quantidade e preço unitário (string).
   const cart = {};
-
-  // Mapeamento de indicadores de quantidade associados a cada item. Cada
-  // chave é o nome do item e o valor é o elemento span que mostra a
-  // quantidade ao lado do botão de adicionar.
   const qtyIndicators = {};
 
-  /**
-   * Atualiza os indicadores de quantidade no cardápio. Percorre
-   * os indicadores registrados e define o texto de cada um
-   * conforme a quantidade no carrinho ou vazio se não estiver presente.
-   */
   function updateIndicators() {
     Object.keys(qtyIndicators).forEach(name => {
       const span = qtyIndicators[name];
@@ -153,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         span.textContent = '';
       }
     });
-    // Atualiza o botão flutuante do carrinho com o número total de itens
     const cartButton = document.getElementById('cartButton');
     const cartCount = document.getElementById('cartCount');
     const totalItems = Object.values(cart).reduce((sum, entry) => sum + entry.quantity, 0);
@@ -166,12 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Adiciona um item ao carrinho. Se o item já existir, incrementa a
-   * quantidade. Atualiza a interface do carrinho.
-   * @param {string} itemName Nome do produto
-   * @param {string} itemPrice Preço unitário (em string)
-   */
   function addToCart(itemName, itemPrice) {
     if (!cart[itemName]) {
       cart[itemName] = { quantity: 1, price: itemPrice };
@@ -182,13 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateIndicators();
   }
 
-  /**
-   * Atualiza a quantidade de um item no carrinho. Se a quantidade
-   * resultar em zero ou menos, remove o item. Em seguida, atualiza a
-   * interface do carrinho.
-   * @param {string} itemName
-   * @param {number} delta Valor a ser somado (pode ser negativo)
-   */
   function updateCart(itemName, delta) {
     if (!cart[itemName]) return;
     cart[itemName].quantity += delta;
@@ -199,10 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateIndicators();
   }
 
-  /**
-   * Renderiza o conteúdo do carrinho na página. Mostra cada item com
-   * botões de incremento/decremento e calcula o total.
-   */
   function renderCart() {
     const cartSection = document.getElementById('cart-section');
     const cartItemsContainer = document.getElementById('cartItems');
@@ -221,18 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const priceNum = parseFloat(entry.price.replace(',', '.'));
       const itemTotal = priceNum * entry.quantity;
       total += itemTotal;
-      // Elemento da linha do item no carrinho
       const row = document.createElement('div');
       row.className = 'cart-item';
-      // Nome do item
       const nameSpan = document.createElement('span');
       nameSpan.className = 'cart-item-name';
       nameSpan.textContent = name;
-      // Preço unitário
       const priceSpan = document.createElement('span');
       priceSpan.className = 'cart-item-price';
       priceSpan.textContent = `R$ ${entry.price}`;
-      // Controles de quantidade
       const controls = document.createElement('div');
       controls.className = 'cart-item-controls';
       const minusBtn = document.createElement('button');
@@ -248,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
       controls.appendChild(minusBtn);
       controls.appendChild(qtySpan);
       controls.appendChild(plusBtn);
-      // Monta a linha
       row.appendChild(nameSpan);
       row.appendChild(priceSpan);
       row.appendChild(controls);
@@ -258,31 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
     cartTotalSpan.textContent = totalStr;
   }
 
-  /**
-   * Gera dinamicamente as seções do cardápio de acordo com a estrutura
-   * definida em menuData. Cada categoria produz um cartão com título,
-   * ícone decorativo e linhas de itens com preço e campo de quantidade.
-   */
   function renderMenu() {
     const menuContainer = document.getElementById('menu');
     menuContainer.innerHTML = '';
-    // Limpa quaisquer indicadores de quantidade existentes
     Object.keys(qtyIndicators).forEach(key => delete qtyIndicators[key]);
 
-    // Organiza o cardápio em duas colunas para refletir o layout do PDF. A
-    // coluna da esquerda conterá Salgados, Comidinhas e Doces; a coluna da
-    // direita conterá Cafeteria, Bebidas e Petit Four. Cada categoria
-    // aparece empilhada dentro da sua coluna.
     const leftCategories = ['Salgados', 'Comidinhas', 'Doces'];
     const rightCategories = ['Cafeteria', 'Bebidas', 'Petit Four'];
 
-    // Função auxiliar que cria um bloco de categoria (título + itens).
     function createCategoryBlock(catName) {
       const category = menuData.find(cat => cat.name === catName);
       if (!category) return null;
       const block = document.createElement('div');
       block.className = 'category-block';
-      // Cabeçalho
       const h3 = document.createElement('h3');
       const iconImg = document.createElement('img');
       iconImg.src = `images/${category.icon}`;
@@ -293,29 +233,22 @@ document.addEventListener('DOMContentLoaded', () => {
       h3.appendChild(iconImg);
       h3.appendChild(titleSpan);
       block.appendChild(h3);
-      // Lista de itens
       const itemList = document.createElement('div');
       itemList.className = 'category-items';
       category.items.forEach(item => {
         const row = document.createElement('div');
         row.className = 'menu-row';
-        // Nome
         const nameSpan = document.createElement('span');
         nameSpan.textContent = item.name;
-        // Preço
         const priceSpan = document.createElement('span');
         priceSpan.textContent = `R$ ${item.price}`;
-        // Botão para adicionar ao carrinho
         const addBtn = document.createElement('button');
         addBtn.type = 'button';
         addBtn.textContent = '+';
         addBtn.className = 'add-btn';
-        // Associa o nome e preço para a função de adicionar
         addBtn.addEventListener('click', () => addToCart(item.name, item.price));
-        // Indicador de quantidade: exibe a quantidade adicionada ao lado do botão
         const qtySpan = document.createElement('span');
         qtySpan.className = 'qty-indicator';
-        // Registra o span para atualizações posteriores
         qtyIndicators[item.name] = qtySpan;
 
         row.appendChild(nameSpan);
@@ -328,87 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return block;
     }
 
-    // Cria as duas colunas do cardápio
     const leftCol = document.createElement('div');
     leftCol.className = 'menu-col';
     leftCategories.forEach(name => {
       const block = createCategoryBlock(name);
       if (block) leftCol.appendChild(block);
-      // Espaço para futuras inserções decorativas na coluna esquerda (caso desejado)
-      /* if (name === 'Comidinhas') {
-        // Inserir imagens decorativas aqui, se necessário.
-      } */
     });
-    // Elemento decorativo no rodapé da coluna esquerda (por exemplo, saleiro)
-    const leftBottomDecor = document.createElement('div');
-    leftBottomDecor.className = 'decor-bottom';
-    const saleiroImg = document.createElement('img');
-    saleiroImg.src = 'images/saleiro.png';
-    saleiroImg.alt = '';
-    saleiroImg.className = 'decor-image';
-    leftBottomDecor.appendChild(saleiroImg);
-    leftCol.appendChild(leftBottomDecor);
-
-    // Cria coluna da direita
     const rightCol = document.createElement('div');
     rightCol.className = 'menu-col';
     rightCategories.forEach(name => {
       const block = createCategoryBlock(name);
       if (block) rightCol.appendChild(block);
-      // Após a categoria Cafeteria, insere imagens decorativas no meio da coluna direita
-      if (name === 'Cafeteria') {
-        const midDecor = document.createElement('div');
-        midDecor.className = 'decor-middle';
-        // Primeira fila: rocambole e rosquinha
-        const row1 = document.createElement('div');
-        const rocamboleImg = document.createElement('img');
-        rocamboleImg.src = 'images/rocambole.png';
-        rocamboleImg.alt = '';
-        rocamboleImg.className = 'decor-image';
-        const rosquinhaImg = document.createElement('img');
-        rosquinhaImg.src = 'images/rosquinha.png';
-        rosquinhaImg.alt = '';
-        rosquinhaImg.className = 'decor-image';
-        row1.appendChild(rocamboleImg);
-        row1.appendChild(rosquinhaImg);
-        row1.style.display = 'flex';
-        row1.style.justifyContent = 'center';
-        row1.style.gap = '20px';
-        midDecor.appendChild(row1);
-        // Segunda fila: xícara de café
-        const row2 = document.createElement('div');
-        const xicaraImg = document.createElement('img');
-        xicaraImg.src = 'images/xicara.png';
-        xicaraImg.alt = '';
-        xicaraImg.className = 'decor-image';
-        row2.appendChild(xicaraImg);
-        row2.style.display = 'flex';
-        row2.style.justifyContent = 'center';
-        row2.style.marginTop = '10px';
-        midDecor.appendChild(row2);
-        rightCol.appendChild(midDecor);
-      }
     });
-    // Elemento decorativo no rodapé da coluna direita (por exemplo, torta doce)
-    const rightBottomDecor = document.createElement('div');
-    rightBottomDecor.className = 'decor-bottom';
-    const tortaImg = document.createElement('img');
-    tortaImg.src = 'images/torta doce.png';
-    tortaImg.alt = '';
-    tortaImg.className = 'decor-image';
-    rightBottomDecor.appendChild(tortaImg);
-    rightCol.appendChild(rightBottomDecor);
 
     menuContainer.appendChild(leftCol);
     menuContainer.appendChild(rightCol);
   }
 
-  // Renderiza o cardápio ao carregar a página
   renderMenu();
-  // Atualiza indicadores e botão do carrinho no carregamento inicial
   updateIndicators();
 
-  // Preenche o campo de seleção de setor com as opções acima.
   const sectorSelect = document.getElementById('customerSector');
   sectors.forEach(sector => {
     const option = document.createElement('option');
@@ -417,12 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
     sectorSelect.appendChild(option);
   });
 
-  // Manipulador de envio do formulário. Constrói a mensagem de WhatsApp com
-  // base nos itens selecionados e nos dados do cliente.
   const orderForm = document.getElementById('orderForm');
   orderForm.addEventListener('submit', event => {
     event.preventDefault();
-    // Constrói a lista de itens do carrinho e o valor total
     const orderLines = [];
     let totalOrder = 0;
     const names = Object.keys(cart);
@@ -440,16 +309,13 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Selecione pelo menos um item do cardápio.');
       return;
     }
-    // Coleta os dados do cliente.
     const customerName = document.getElementById('customerName').value.trim();
     const customerPhone = document.getElementById('customerPhone').value.trim();
     const customerRoom = document.getElementById('customerRoom').value.trim();
     const customerSector = document.getElementById('customerSector').value;
     const paymentMethod = document.getElementById('paymentMethod').value;
     const consumptionType = document.getElementById('consumptionType').value;
-    // Formata o valor total do pedido
     const totalStr = totalOrder.toFixed(2).replace('.', ',');
-    // Formata a mensagem a ser enviada via WhatsApp, incluindo valor total e tipo de serviço.
     const message =
       `Olá, gostaria de fazer um pedido:\n\n` +
       `Itens selecionados:\n${orderLines.join('\n')}\n\n` +
@@ -460,16 +326,15 @@ document.addEventListener('DOMContentLoaded', () => {
       `Setor: ${customerSector}\n` +
       `Forma de pagamento: ${paymentMethod}\n` +
       `Serviço: ${consumptionType}`;
-    // Número do WhatsApp de destino (DDI + DDD + número, sem caracteres especiais)
-    const whatsappNumber = '5511918360016';
+    const whatsappNumber = '5511918360016'; // Número atualizado
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
   });
 
-  // Botão flutuante para navegar ao carrinho ao clicar
   const cartButtonElem = document.getElementById('cartButton');
   cartButtonElem.addEventListener('click', () => {
     const cartSection = document.getElementById('cart-section');
     cartSection.scrollIntoView({ behavior: 'smooth' });
   });
 });
+
