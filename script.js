@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Cappuccino', price: '10,00' },
         { name: 'Média', price: '8,50' },
         { name: 'Chocolate Quente', price: '10,00' }
-        { name: 'Machiato', price: '6,50' }
       ]
     },
     {
