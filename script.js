@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Café', price: '6,00' },
         { name: 'Cappuccino', price: '10,00' },
         { name: 'Média', price: '8,50' },
-        { name: 'Chocolate Quente', price: '10,00' }
+        { name: 'Chocolate Quente', price: '10,00' },
+        // Item Machiato adicionado
+        { name: 'Machiato', price: '6,50' }
       ]
     },
     {
@@ -248,11 +250,57 @@ document.addEventListener('DOMContentLoaded', () => {
     menuContainer.innerHTML = '';
     Object.keys(qtyIndicators).forEach(key => delete qtyIndicators[key]);
 
-    const leftCategories = ['Salgados', 'Comidinhas', 'Doces'];
-    const rightCategories = ['Cafeteria', 'Bebidas', 'Petit Four', 'Combo Promocional'];
+    const leftCol = document.createElement('div');
+    leftCol.className = 'menu-col';
 
-    function createCategoryBlock(catName) {
-      const category = menuData.find(cat => cat.name === catName);
+    const rightCol = document.createElement('div');
+    rightCol.className = 'menu-col';
+
+    // Distribui as categorias entre as duas colunas
+    menuData.forEach((category, index) => {
+      const block = createCategoryBlock(category);
+      if (block) {
+        if (index % 2 === 0) {
+          leftCol.appendChild(block);
+        } else {
+          rightCol.appendChild(block);
+          // Adiciona decoração intermediária após a categoria "Cafeteria"
+          if (category.name === 'Cafeteria') {
+            const midDecor = document.createElement('div');
+            midDecor.className = 'decor-middle';
+            const row1 = document.createElement('div');
+            const rocamboleImg = document.createElement('img');
+            rocamboleImg.src = 'images/rocambole.png';
+            rocamboleImg.alt = '';
+            rocamboleImg.className = 'decor-image';
+            const rosquinhaImg = document.createElement('img');
+            rosquinhaImg.src = 'images/rosquinha.png';
+            rosquinhaImg.alt = '';
+            rosquinhaImg.className = 'decor-image';
+            row1.appendChild(rocamboleImg);
+            row1.appendChild(rosquinhaImg);
+            row1.style.display = 'flex';
+            row1.style.justifyContent = 'center';
+            row1.style.gap = '20px';
+            midDecor.appendChild(row1);
+
+            const row2 = document.createElement('div');
+            const xicaraImg = document.createElement('img');
+            xicaraImg.src = 'images/xicara.png';
+            xicaraImg.alt = '';
+            xicaraImg.className = 'decor-image';
+            row2.appendChild(xicaraImg);
+            row2.style.display = 'flex';
+            row2.style.justifyContent = 'center';
+            row2.style.marginTop = '10px';
+            midDecor.appendChild(row2);
+            rightCol.appendChild(midDecor);
+          }
+        }
+      }
+    });
+
+    function createCategoryBlock(category) {
       if (!category) return null;
 
       const block = document.createElement('div');
@@ -322,13 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return block;
     }
 
-    // Coluna esquerda
-    const leftCol = document.createElement('div');
-    leftCol.className = 'menu-col';
-    leftCategories.forEach(name => {
-      const block = createCategoryBlock(name);
-      if (block) leftCol.appendChild(block);
-    });
     // Decoração inferior esquerda
     const leftBottomDecor = document.createElement('div');
     leftBottomDecor.className = 'decor-bottom';
@@ -339,45 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
     leftBottomDecor.appendChild(saleiroImg);
     leftCol.appendChild(leftBottomDecor);
 
-    // Coluna direita
-    const rightCol = document.createElement('div');
-    rightCol.className = 'menu-col';
-    rightCategories.forEach(name => {
-      const block = createCategoryBlock(name);
-      if (block) rightCol.appendChild(block);
-      // Decoração no meio após Cafeteria
-      if (name === 'Cafeteria') {
-        const midDecor = document.createElement('div');
-        midDecor.className = 'decor-middle';
-        const row1 = document.createElement('div');
-        const rocamboleImg = document.createElement('img');
-        rocamboleImg.src = 'images/rocambole.png';
-        rocamboleImg.alt = '';
-        rocamboleImg.className = 'decor-image';
-        const rosquinhaImg = document.createElement('img');
-        rosquinhaImg.src = 'images/rosquinha.png';
-        rosquinhaImg.alt = '';
-        rosquinhaImg.className = 'decor-image';
-        row1.appendChild(rocamboleImg);
-        row1.appendChild(rosquinhaImg);
-        row1.style.display = 'flex';
-        row1.style.justifyContent = 'center';
-        row1.style.gap = '20px';
-        midDecor.appendChild(row1);
-
-        const row2 = document.createElement('div');
-        const xicaraImg = document.createElement('img');
-        xicaraImg.src = 'images/xicara.png';
-        xicaraImg.alt = '';
-        xicaraImg.className = 'decor-image';
-        row2.appendChild(xicaraImg);
-        row2.style.display = 'flex';
-        row2.style.justifyContent = 'center';
-        row2.style.marginTop = '10px';
-        midDecor.appendChild(row2);
-        rightCol.appendChild(midDecor);
-      }
-    });
     // Decoração inferior direita
     const rightBottomDecor = document.createElement('div');
     rightBottomDecor.className = 'decor-bottom';
