@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviso Importante - Dolce Café</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            /* Cor de fundo base atualizada */
+            --bg-coffee: #392502; 
+            --border-itau: #ec7000;
+            --text-alert: #ff0000;
+            --text-white: #ffffff;
+            --highlight: #ffd700;
+        }
+
+        body {
+            background-color: var(--bg-coffee);
+            /* Gradiente ajustado para o novo tom de marrom */
+            background-image: radial-gradient(circle at center, #5c3e05 0%, #1a1100 100%);
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .notice-card {
+            background: rgba(30, 20, 5, 0.95);
+            border: 6px solid var(--border-itau);
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            text-align: center;
+            position: relative;
+        }
+
+        .header-alert {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            color: var(--text-alert);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .highlight-date {
+            color: var(--border-itau);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .highlight-time {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            margin: 1.5rem auto;
+            width: 90%;
+        }
+
+        /* Animação de entrada do cartão principal */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- NOVAS ANIMAÇÕES PARA OS CARDS DE FERIADO --- */
+        
+        /* Efeito de cair com "quicada" (Bounce Drop) */
+        @keyframes dropIn {
+            0% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+            60% { opacity: 1; transform: translateY(10px) scale(1.02); }
+            80% { transform: translateY(-5px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Efeito de pulsação contínua (Heartbeat/Glow) */
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(236, 112, 0, 0.2); border-color: var(--border-itau); }
+            50% { box-shadow: 0 0 20px rgba(236, 112, 0, 0.6); border-color: #ffd700; transform: scale(1.02); }
+            100% { box-shadow: 0 0 5px rgba(236, 112, 0, 0.2); border-color: var(--border-itau); }
+        }
+
+        .holiday-card {
+            /* Estilo Padronizado */
+            background: linear-gradient(135deg, rgba(236, 112, 0, 0.1) 0%, rgba(0,0,0,0.3) 100%);
+            border: 2px solid var(--border-itau);
+            border-radius: 10px;
+            padding: 1rem;
+            position: relative;
+            opacity: 0; /* Começa invisível para a animação */
+            /* Combina animação de entrada + pulsação infinita com delay */
+            animation: 
+                dropIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards,
+                glowPulse 3s infinite ease-in-out 1.5s; 
+        }
+
+        /* Delay diferente para cada card para dar efeito cascata */
+        .card-1 { animation-delay: 0.5s, 2s; }
+        .card-2 { animation-delay: 0.7s, 2s; }
+
+    </style>
+</head>
+<body>
+
+    <div class="notice-card fade-in">
+        <!-- Espaço para o Logotipo -->
+        <div class="mb-8 flex justify-center">
+            <!-- CAMINHO ATUALIZADO: Agora busca dentro da pasta 'images' -->
+            <img src="images/logo.png" alt="Logotipo Dolce Café" class="h-24 md:h-32 object-contain filter drop-shadow-lg" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+            
+            <div id="logo-fallback" style="display:none;" class="text-center">
+                <div class="flex items-center justify-center space-x-2 text-orange-500 mb-2">
+                    <i data-lucide="coffee" class="w-12 h-12"></i>
+                </div>
+                <h2 class="font-bold text-2xl font-serif tracking-widest text-orange-500">DOLCE CAFÉ</h2>
+            </div>
+        </div>
+
+        <!-- Cabeçalho -->
+        <h1 class="header-alert text-3xl md:text-5xl mb-8 animate-pulse">
+            ATENÇÃO<br>MENSAGEM IMPORTANTE!!!
+        </h1>
+
+        <!-- Corpo Principal -->
+        <div class="text-lg md:text-xl leading-relaxed space-y-6">
+            
+            <p>
+                A lanchonete <strong class="text-white">Dolce Café</strong> estará <span class="text-red-400 font-bold">fechada para reformas</span> no período de:
+                <br>
+                <span class="highlight-date text-2xl block mt-2 drop-shadow-md">13/12 a 06/01</span>
+            </p>
+
+            <div class="bg-white/5 p-4 rounded-lg border-l-4 border-orange-500 text-left md:text-center mx-2 md:mx-0">
+                <p class="mb-2">
+                    <i data-lucide="map-pin" class="inline w-5 h-5 text-orange-500 mr-1"></i>
+                    Para atendê-los, a lanchonete localizada na <strong>Recepção da Borges Lagoa</strong> estará aberta:
+                </p>
+                <p>
+                    De <span class="font-bold">Domingo a Domingo</span>
+                    <br>
+                    Das <span class="highlight-time">06:00 às 23:00 horas</span>.
+                </p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Horários Especiais -->
+            <div class="mt-8 pb-4">
+                <h3 class="font-bold text-xl mb-6 text-orange-400 flex items-center justify-center uppercase tracking-wider">
+                    <i data-lucide="calendar-clock" class="w-6 h-6 mr-2"></i>
+                    Horários Especiais
+                </h3>
+
+                <!-- Grid dos Cards Padronizados -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base px-2">
+                    
+                    <!-- Card Natal -->
+                    <div class="holiday-card card-1">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gray-900 px-3 py-0.5 border border-orange-500/50 rounded-full">
+                            <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">Natal</span>
+                        </div>
+                        <div class="mt-2">
+                            <div class="mb-2 text-white/90">Dias <span class="highlight-date text-lg">23, 24 e 25/12</span></div>
+                            <div class="text-yellow-400 font-bold border-t border-white/10 pt-2 mt-2">06:00 às 18:00 horas</div>
+                        </div>
+                    </div>
+
+                    <!-- Card Ano Novo -->
+                    <div class="holiday-card card-2">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gray-900 px-3 py-0.5 border border-orange-500/50 rounded-full">
+                            <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">Ano Novo</span>
+                        </div>
+                        <div class="mt-2">
+                            <div class="mb-2 text-white/90">Dias <span class="highlight-date text-lg">30, 31/12 e 01/01</span></div>
+                            <div class="text-yellow-400 font-bold border-t border-white/10 pt-2 mt-2">06:00 às 18:00 horas</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-8 text-sm text-gray-500 border-t border-gray-800 pt-4">
+            <p>Agradecemos a compreensão e desejamos boas festas!</p>
+        </div>
+    </div>
+
+    <!-- Script para renderizar ícones -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
